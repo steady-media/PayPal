@@ -103,9 +103,7 @@ defmodule PayPal.API do
     case HTTPoison.post(base_url() <> url, data, headers()) do
       {:ok, %{status_code: 401}} ->
         {:error, :unauthorised}
-      {:ok, %{body: body, status_code: 200}} ->
-        {:ok, Poison.decode!(body, keys: :atoms)}
-      {:ok, %{body: body, status_code: 201}} ->
+      {:ok, %{body: body, status_code: status_code}} when status_code in [200, 201, 202] ->
         {:ok, Poison.decode!(body, keys: :atoms)}
       {:ok, %{status_code: 404}} ->
         {:ok, :not_found}
